@@ -1,21 +1,23 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import { Stack } from "expo-router";
+import { Link, Stack } from "expo-router";
 
-const polls = [1, 2, 3];
+const polls = [
+  { id: 1, title: "Class Representative" },
+  { id: 2, title: "Class Prefect" },
+  { id: 3, title: "Class Captain" },
+];
 
 export default function HomeScreen() {
   return (
     <>
-      <Stack.Screen 
-        options={{ title: "Polls" }}
-      />
+      <Stack.Screen options={{ title: "Polls" }} />
       <FlatList
         data={polls}
         contentContainerStyle={[styles.container]}
         renderItem={({ item }) => (
-          <View style={styles.pollContainer}>
-            <Text style={styles.pollTitle}>Class Representative</Text>
-          </View>
+          <Link href={`/polls/${item.id}`} style={styles.pollContainer}>
+            <Text style={styles.pollTitle}>{item.id}{")"} {item.title}</Text>
+          </Link>
         )}
       />
     </>
