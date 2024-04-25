@@ -1,5 +1,6 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { Link, Stack } from "expo-router";
+import { AntDesign } from "@expo/vector-icons";
 
 const polls = [
   { id: 1, title: "Class Representative" },
@@ -10,13 +11,33 @@ const polls = [
 export default function HomeScreen() {
   return (
     <>
-      <Stack.Screen options={{ title: "Polls" }} />
+      <Stack.Screen
+        options={{
+          title: "Polls",
+          headerRight: () => (
+            <Link href="/polls/new">
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="plus" size={20} color="gray" />
+                <Text style={{ marginLeft: 5, fontSize: 16, fontWeight: "bold", color: "gray" }}>Create</Text>
+              </View>
+            </Link>
+          ),
+        }}
+      />
       <FlatList
         data={polls}
         contentContainerStyle={[styles.container]}
         renderItem={({ item }) => (
           <Link href={`/polls/${item.id}`} style={styles.pollContainer}>
-            <Text style={styles.pollTitle}>{item.id}{")"} {item.title}</Text>
+            <Text style={styles.pollTitle}>
+              {item.id}
+              {")"} {item.title}
+            </Text>
           </Link>
         )}
       />

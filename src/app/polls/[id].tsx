@@ -41,7 +41,7 @@ export default function PollDetails() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    padding: 15,
     gap: 20,
   },
   question: {
@@ -50,8 +50,8 @@ const styles = StyleSheet.create({
   },
   optionContainer: {
     backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 5,
+    padding: 15,
+    borderRadius: 15,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
