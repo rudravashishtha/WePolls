@@ -1,14 +1,25 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import { Link, Stack } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
-
-const polls = [
-  { id: 1, title: "Class Representative" },
-  { id: 2, title: "Class Prefect" },
-  { id: 3, title: "Class Captain" },
-];
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
 
 export default function HomeScreen() {
+  const [polls, setPolls] = useState([]);
+
+  useEffect(() => {
+    const fetchPolls = async () => {
+      let { data, error } = await supabase.from("polls").select("*");
+      if (error) {
+        Alert.alert("Error fetching polls", error.message);
+        return;
+      }
+      console.log(data);
+      setPolls(data);
+    };
+    fetchPolls();
+  }, []);
+
   return (
     <>
       <Stack.Screen
@@ -23,7 +34,16 @@ export default function HomeScreen() {
                 }}
               >
                 <AntDesign name="plus" size={20} color="gray" />
-                <Text style={{ marginLeft: 5, fontSize: 16, fontWeight: "bold", color: "gray" }}>Create</Text>
+                <Text
+                  style={{
+                    marginLeft: 5,
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    color: "gray",
+                  }}
+                >
+                  Create
+                </Text>
               </View>
             </Link>
           ),
@@ -35,8 +55,7 @@ export default function HomeScreen() {
         renderItem={({ item }) => (
           <Link href={`/polls/${item.id}`} style={styles.pollContainer}>
             <Text style={styles.pollTitle}>
-              {item.id}
-              {")"} {item.title}
+              {item.id}. {item.question}
             </Text>
           </Link>
         )}
