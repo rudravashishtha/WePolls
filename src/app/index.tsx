@@ -3,6 +3,7 @@ import { Link, Stack } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
+import { useAuth } from "../providers/AuthProvider";
 
 export default function HomeScreen() {
   const [polls, setPolls] = useState([]);
@@ -14,17 +15,30 @@ export default function HomeScreen() {
         Alert.alert("Error fetching polls", error.message);
         return;
       }
-      console.log(data);
+      // console.log(data);
       setPolls(data);
     };
     fetchPolls();
   }, []);
+
+  const { session } = useAuth();
 
   return (
     <>
       <Stack.Screen
         options={{
           title: "Polls",
+          headerTitleAlign: "center",
+          headerLeft: () => (
+            <Link href={session && session.user ? '/profile' : '/login'}>
+              <AntDesign
+                name={session && session.user ? 'user' : 'login'}
+                style={{ marginLeft: 15 }}
+                size={20}
+                color="gray"
+              />
+            </Link>
+          ),
           headerRight: () => (
             <Link href="/polls/new">
               <View
@@ -40,6 +54,7 @@ export default function HomeScreen() {
                     fontSize: 16,
                     fontWeight: "bold",
                     color: "gray",
+                    marginRight: 15,
                   }}
                 >
                   Create

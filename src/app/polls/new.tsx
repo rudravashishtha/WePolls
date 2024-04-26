@@ -24,26 +24,29 @@ export default function CreatePoll() {
 
       <Text style={styles.label}>Options</Text>
       {options.map((option, index) => (
-        <View key={index} style={{justifyContent: "center"}}>
-        <TextInput
-          value={option}
-          onChangeText={(text) => {
-            const updatedOptions = [...options];
-            updatedOptions[index] = text;
-            setOptions(updatedOptions);
-          }}
-          placeholder={`Option ${index + 1}`}
-          key={index}
-          style={styles.input}
-        />
-        <Feather name="x" size={20} color="gray" 
+        <View key={index} style={{ justifyContent: "center" }}>
+          <TextInput
+            value={option}
+            onChangeText={(text) => {
+              const updatedOptions = [...options];
+              updatedOptions[index] = text;
+              setOptions(updatedOptions);
+            }}
+            placeholder={`Option ${index + 1}`}
+            key={index}
+            style={styles.input}
+          />
+          <Feather
+            name="x"
+            size={20}
+            color="gray"
             onPress={() => {
-                const updatedOptions = [...options];
-                updatedOptions.splice(index, 1);
-                setOptions(updatedOptions);
+              const updatedOptions = [...options];
+              updatedOptions.splice(index, 1);
+              setOptions(updatedOptions);
             }}
             style={{ position: "absolute", right: 10 }}
-        />
+          />
         </View>
       ))}
       <Button
