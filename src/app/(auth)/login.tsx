@@ -9,7 +9,7 @@ import {
   Text,
 } from "react-native";
 import { supabase } from "../../lib/supabase";
-import { router } from "expo-router";
+import { Stack, router } from "expo-router";
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -55,6 +55,7 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
+        <Stack.Screen options={{ title: "Login" }} />
       <Text>Sign in or Create an Account</Text>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <TextInput

@@ -1,15 +1,11 @@
 import { Session } from "@supabase/supabase-js";
 import { Redirect, Stack, router } from "expo-router";
 import { Button, StyleSheet, Text, View } from "react-native";
-import { supabase } from "../lib/supabase";
-import { useAuth } from "../providers/AuthProvider";
+import { supabase } from "../../lib/supabase";
+import { useAuth } from "../../providers/AuthProvider";
 
 export default function ProfileScreen() {
-  const { session, user } = useAuth();
-
-  if (!user) {
-    return <Redirect href="/login" />;
-  }
+  const { user } = useAuth();
 
   return (
     <View>
