@@ -8,5 +8,5 @@ export default function ProtectedLayout() {
         return <Redirect href="/login" />;
     }
 
-    return <Slot />;
+    return <Slot  />;
 }

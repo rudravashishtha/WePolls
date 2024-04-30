@@ -1,12 +1,17 @@
 import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import { Link, Stack } from "expo-router";
-import { AntDesign } from "@expo/vector-icons";
+import {
+  AntDesign,
+  FontAwesome5,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../providers/AuthProvider";
+import { Poll } from "../types/db";
 
 export default function HomeScreen() {
-  const [polls, setPolls] = useState([]);
+  const [polls, setPolls] = useState<Poll[]>([]);
 
   useEffect(() => {
     const fetchPolls = async () => {
@@ -15,7 +20,6 @@ export default function HomeScreen() {
         Alert.alert("Error fetching polls", error.message);
         return;
       }
-      // console.log(data);
       setPolls(data);
     };
     fetchPolls();
@@ -30,9 +34,9 @@ export default function HomeScreen() {
           title: "Polls",
           headerTitleAlign: "center",
           headerLeft: () => (
-            <Link href={session && session.user ? '/profile' : '/login'}>
+            <Link href={session && session.user ? "/profile" : "/login"}>
               <AntDesign
-                name={session && session.user ? 'user' : 'login'}
+                name={session && session.user ? "user" : "login"}
                 style={{ marginLeft: 15 }}
                 size={20}
                 color="gray"
@@ -54,7 +58,7 @@ export default function HomeScreen() {
                     fontSize: 16,
                     fontWeight: "bold",
                     color: "gray",
-                    marginRight: 15,
+                    marginRight: 5,
                   }}
                 >
                   Create
@@ -69,9 +73,9 @@ export default function HomeScreen() {
         contentContainerStyle={[styles.container]}
         renderItem={({ item }) => (
           <Link href={`/polls/${item.id}`} style={styles.pollContainer}>
-            <Text style={styles.pollTitle}>
-              {item.id}. {item.question}
-            </Text>
+            <MaterialCommunityIcons name="poll" size={18} color="black" />
+            {"  "}
+            <Text style={styles.pollTitle}>{item.question}</Text>
           </Link>
         )}
       />

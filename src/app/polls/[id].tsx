@@ -1,29 +1,57 @@
 import { Stack, useLocalSearchParams } from "expo-router";
-import { Text, View, StyleSheet, Pressable, Button } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Pressable,
+  Button,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useState } from "react";
-
-const poll = {
-  question: "React Native or Flutter?",
-  options: ["React Native", "Flutter", "Both", "None", "Other"],
-};
+import { useEffect, useState } from "react";
+import { Poll } from "../../types/db";
+import { supabase } from "../../lib/supabase";
 
 export default function PollDetails() {
   const [selectedOption, setSelectedOption] = useState("");
   const { id } = useLocalSearchParams<{ id: string }>();
+  const [poll, setPoll] = useState<Poll>(null);
+
+  useEffect(() => {
+    const fetchPolls = async () => {
+      let { data, error } = await supabase
+        .from("polls")
+        .select("*")
+        .eq("id", Number.parseInt(id))
+        .single();
+      if (error) {
+        Alert.alert("Error fetching polls", error.message);
+        return;
+      }
+      setPoll(data);
+    };
+    fetchPolls();
+  }, []);
 
   const vote = () => {
     alert(`You selected ${selectedOption}`);
+  };
+
+  if (!poll) {
+    return <ActivityIndicator style={{ marginTop: 30 }} size="large" />;
   }
   return (
     <View style={styles.container}>
-        <Stack.Screen options={{ title: "Your Vote Matters" }} />
+      <Stack.Screen options={{ title: "Your Vote Matters" }} />
       <Text style={styles.question}>{poll.question}</Text>
       <View style={{ gap: 5 }}>
         {poll.options.map((option) => (
-          <Pressable onPress={
-            () => setSelectedOption(option)
-          } key={option} style={styles.optionContainer}>
+          <Pressable
+            onPress={() => setSelectedOption(option)}
+            key={option}
+            style={styles.optionContainer}
+          >
             <Feather
               name={option === selectedOption ? "check-circle" : "circle"}
               size={18}
