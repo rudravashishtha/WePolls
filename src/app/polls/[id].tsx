@@ -1,4 +1,4 @@
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import {
   Text,
   View,
@@ -10,13 +10,17 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Poll } from "../../types/db";
+import { Poll, Vote } from "../../types/db";
 import { supabase } from "../../lib/supabase";
+import { useAuth } from "../../providers/AuthProvider";
 
 export default function PollDetails() {
   const [selectedOption, setSelectedOption] = useState("");
   const { id } = useLocalSearchParams<{ id: string }>();
   const [poll, setPoll] = useState<Poll>(null);
+  const [userVote, setUserVote] = useState<Vote>(null);
+
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchPolls = async () => {
@@ -31,11 +35,55 @@ export default function PollDetails() {
       }
       setPoll(data);
     };
+
+    const fetchUserVote = async () => {
+      let { data, error } = await supabase
+        .from("votes")
+        .select("*")
+        .eq("poll_id", Number.parseInt(id))
+        .eq("user_id", user.id)
+        .limit(1)
+        .single();
+
+      if (data !== null && error) {
+        Alert.alert("Error fetching user vote", error.message);
+        return;
+      }
+
+      setUserVote(data);
+      // console.log(data);
+
+      if (data) {
+        setSelectedOption(data.option);
+      }
+    };
     fetchPolls();
+    fetchUserVote();
   }, []);
 
-  const vote = () => {
-    alert(`You selected ${selectedOption}`);
+  const vote = async () => {
+    const newVote = {
+      option: selectedOption,
+      poll_id: poll.id,
+      user_id: user.id,
+    };
+    if (userVote) {
+      newVote.id = userVote.id;
+    }
+    const { data, error } = await supabase
+      .from("votes")
+      .upsert([newVote])
+      .select()
+      .single();
+
+    if (error) {
+      Alert.alert("Error voting");
+      return;
+    } else {
+      setUserVote(data);
+      Alert.alert("Thank you for voting!");
+      router.back();
+    }
   };
 
   if (!poll) {

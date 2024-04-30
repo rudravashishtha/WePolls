@@ -1,11 +1,14 @@
-import { Session } from "@supabase/supabase-js";
 import { Redirect, Stack, router } from "expo-router";
 import { Button, StyleSheet, Text, View } from "react-native";
-import { supabase } from "../../lib/supabase";
-import { useAuth } from "../../providers/AuthProvider";
+import { supabase } from "../lib/supabase";
+import { useAuth } from "../providers/AuthProvider";
 
 export default function ProfileScreen() {
   const { user } = useAuth();
+
+  if (!user) {
+    return <Redirect href="/login" />;
+  }
 
   return (
     <View>
@@ -15,10 +18,13 @@ export default function ProfileScreen() {
         <Text style={styles.text}>{user?.email}</Text>
       </View>
 
-      <Button title="Sign Out" onPress={() => {
-        supabase.auth.signOut()
-        router.push("/")
-      }} />
+      <Button
+        title="Sign Out"
+        onPress={() => {
+          supabase.auth.signOut();
+          router.push("/");
+        }}
+      />
     </View>
   );
 }
