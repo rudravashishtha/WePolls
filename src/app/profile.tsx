@@ -4,18 +4,18 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../providers/AuthProvider";
 
 export default function ProfileScreen() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
-  if (!user) {
+  if (!isAuthenticated) {
     return <Redirect href="/login" />;
   }
 
   return (
-    <View>
+    <View style={{padding: 10, margin: 15}}>
       <View style={styles.container}>
         <Stack.Screen options={{ title: "Profile" }} />
-        <Text style={styles.label}>Email</Text>
-        <Text style={styles.text}>{user?.email}</Text>
+        <Text style={styles.label}>User Id: {user.id}</Text>
+        <Text style={styles.label}>Email: {user.email}</Text>
       </View>
 
       <Button
@@ -38,12 +38,5 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 16,
     marginTop: 10,
-  },
-  text: {
-    fontSize: 16,
-    backgroundColor: "#f9f9f9",
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 5,
   },
 });

@@ -37,6 +37,7 @@ export default function PollDetails() {
     };
 
     const fetchUserVote = async () => {
+      if (!user) return;
       let { data, error } = await supabase
         .from("votes")
         .select("*")
@@ -65,7 +66,7 @@ export default function PollDetails() {
     const newVote = {
       option: selectedOption,
       poll_id: poll.id,
-      user_id: user.id,
+      user_id: user?.id,
     };
     if (userVote) {
       newVote.id = userVote.id;

@@ -25,7 +25,7 @@ export default function HomeScreen() {
     fetchPolls();
   }, []);
 
-  const { session } = useAuth();
+  const { session, isAuthenticated } = useAuth();
 
   return (
     <>
@@ -34,9 +34,9 @@ export default function HomeScreen() {
           title: "Polls",
           headerTitleAlign: "center",
           headerLeft: () => (
-            <Link href={session && session.user ? "/profile" : "/login"}>
+            <Link href={isAuthenticated ? "/profile" : "/login"}>
               <AntDesign
-                name={session && session.user ? "user" : "login"}
+                name={isAuthenticated ? "user" : "login"}
                 style={{ marginLeft: 15 }}
                 size={20}
                 color="gray"

@@ -2,9 +2,9 @@ import { Redirect, Slot } from "expo-router";
 import { useAuth } from "../../providers/AuthProvider";
 
 export default function AuthLayout() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
-  if (user) {
+  if (isAuthenticated) {
     return <Redirect href="/profile" />;
   }
   return <Slot />;
